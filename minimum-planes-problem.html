@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Planes to Reach Last Airport</title>
+    <script>
+        function minPlanesToReachLastAirport(fuelArray) {
+            const N = fuelArray.length;
+            // If there is only one airport, consider it as destination.
+            if (N === 1) {
+                return 0;
+            }
+            // Initialize variables
+            let planes = 0;          // Number of planes hired
+            let currentEnd = 0;     // The farthest we can reach with the current plane
+            let farthest = 0;       // The farthest we can reach overall
+
+            for (let i = 0; i < N; i++) {
+                // Update the farthest reach
+                farthest = Math.max(farthest, i + fuelArray[i]);
+                // If we've reached the end of the range with the current plane
+                if (i === currentEnd) {
+                    if (currentEnd >= N - 1) {
+                        break;  // We've reached or passed the last airport
+                    }
+                    // Hire a new plane
+                    planes++;
+                    currentEnd = farthest;
+                    // If after hiring a new plane, can't move further, return -1
+                    if (currentEnd === i) {
+                        return -1;
+                    }
+                }
+                // If we reach or surpass the last airport, return the number of planes
+                if (currentEnd >= N - 1) {
+                    return planes;
+                }
+            }
+            // If we exit the loop without having reached the last airport
+            return -1;
+        }
+
+        function calculateMinimumPlanes() {
+            const userInput = document.getElementById('fuelInput').value;
+            const fuelArray = userInput.split(" ").map(Number);
+            const result = minPlanesToReachLastAirport(fuelArray);
+            document.getElementById('result').innerText = 'Minimum planes required: ' + result;
+        }
+        
+    </script>
+</head>
+<body>
+    <h1>Minimum Planes to Reach Last Airport</h1>
+    <label for="fuelInput">Enter the fuel units for each airport separated by spaces:</label>
+    <input type="text" id="fuelInput">
+    <button onclick="calculateMinimumPlanes()">Calculate</button>
+    <p id="result"></p>
+</body>
+</html>
